@@ -12,8 +12,8 @@ The goal of this endeavour was to demonstrate end-to-end deployment of π0.5. He
 
 A demo can be viewed below. The policy places the yellow cube on top of the red circle with only a front-view static camera and a wrist-camera. No depth information is used.
 
+https://github.com/user-attachments/assets/83b9818b-decc-482a-8fa9-9d672b73499b
 
-https://github.com/user-attachments/assets/5a706b0e-591d-43d8-9a97-d97783d2285c
 
 
 
