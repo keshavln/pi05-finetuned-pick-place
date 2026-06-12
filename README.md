@@ -1,4 +1,4 @@
-# pi05-finetuned-pick-place
+# Fine Tuning π0.5 in a Custom Robosuite Environment
 
 ## Overview
 
