@@ -26,7 +26,7 @@
         }
     },
     "dataset": {
-        "repo_id": "KeshavLN/deskorg_blue_s",
+        "repo_id": "insert repo id here",
         "root": null,
         "task": "Pick up the blue cube and place it on the red circle.",
         "num_episodes_to_record": 50,
