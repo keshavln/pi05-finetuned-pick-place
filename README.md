@@ -8,7 +8,7 @@ This repository contains the source code to:
 - Fine tune π0.5, a Vision-Language-Action model by Physical Intelligence
 - Run inference
 
-The goal of this endeavour was to demonstrate end-to-end deployment of π0.5. Hence, the environment used is relatively simple: consisting of a blue cube, a yellow cube and a red circle on a checkered table. Work in progress to extend this setup to more advanced manipulation tasks. The fine-tuned policy can be found [here](https://huggingface.co/KeshavLN/deskorgv1.4_policy), and the dataset used can be found [here](https://huggingface.co/datasets/KeshavLN/deskorgv1.2_dataset).
+The goal of this endeavour was to demonstrate end-to-end deployment of π0.5. Hence, the environment used is relatively simple: consisting of a blue cube, a yellow cube and a red circle on a checkered table. This codebase is under development to extend this setup to more advanced manipulation tasks. The fine-tuned policy can be found [here](https://huggingface.co/KeshavLN/deskorgv1.4_policy), and the dataset used can be found [here](https://huggingface.co/datasets/KeshavLN/deskorgv1.2_dataset).
 
 
 
