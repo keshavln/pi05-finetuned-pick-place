@@ -14,7 +14,7 @@ A demo can be viewed below. The policy places the yellow cube on top of the red 
 
 
 
-https://github.com/user-attachments/assets/9208fd9a-30ea-48ff-b912-fbcb87fdb54c
+https://github.com/user-attachments/assets/c0502b93-228f-4a56-8104-cb428ce410f1
 
 
 
