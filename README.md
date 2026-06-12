@@ -8,7 +8,9 @@ This repository contains the source code to:
 - Fine tune π0.5, a Vision-Language-Action model by Physical Intelligence
 - Run inference
 
-The goal of this endeavour was to demonstrate end-to-end deployment of π0.5. Hence, the environment used is relatively simple: consisting of a blue cube, a yellow cube and a red circle on a checkered table. Work in progress to extend this setup to more advanced manipulation tasks.
+The goal of this endeavour was to demonstrate end-to-end deployment of π0.5. Hence, the environment used is relatively simple: consisting of a blue cube, a yellow cube and a red circle on a checkered table. Work in progress to extend this setup to more advanced manipulation tasks. The fine-tuned policy can be found [here](https://huggingface.co/KeshavLN/deskorgv1.4_policy), and the dataset used can be found [here](https://huggingface.co/datasets/KeshavLN/deskorgv1.2_dataset).
+
+
 
 A demo can be viewed below.
 
@@ -18,4 +20,4 @@ In `organizing_env.py`, a class, `DeskOrganizerRobosuiteEnv`, is defined for the
 
 To make recording episodes easier, a simple path planner automatically accesses the coordinates of objects in the scene and guides the manipulator to complete the task. Alternatively, a gamepad can be used for teleoperation. This setting can be changed by toggling the `control_mode` argument between `auto` and `manual` in the constructor for the Gymnasium wrapper. It is set to `auto` by default. The number of episodes to record, control time, HuggingFace repository, and additional details are all specified in `config.json`, which is passed to `gym_manipulator.py` as a command line argument. Keep in mind that terminal authentication is required via `hf auth login` before a locally recorded dataset can be pushed to HuggingFace.
 
-A π0.5 checkpoint already fine-tuned on the libero environment was chosen for further fine-tuning, and yielded much better results compared to the base model. Relative actions were not used.
+A pre-existing π0.5 checkpoint fine-tuned on the libero environment was chosen for further fine-tuning, and yielded much better results compared to the base model. Relative actions were not used. `inference.ipynb` contains the final inference code, and makes use of libero's processors. Training was done on an RTX Pro 6000 GPU and inference/testing were carried out on an L4 GPU. Refer to `commands.txt` for useful terminal commands to train/record datasets.
