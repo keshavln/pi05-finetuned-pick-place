@@ -1,4 +1,3 @@
-from OpenGL.raw.GL.SGIS.point_line_texgen import GL_OBJECT_DISTANCE_TO_LINE_SGIS
 import gymnasium as gym
 import numpy as np
 import os
