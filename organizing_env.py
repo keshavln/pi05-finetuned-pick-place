@@ -1,16 +1,22 @@
+from OpenGL.raw.GL.SGIS.point_line_texgen import GL_OBJECT_DISTANCE_TO_LINE_SGIS
 import gymnasium as gym
 import numpy as np
 import os
 import cv2
+import time
 import mujoco
+from random import random, randint, choice
+from pathlib import Path
 from gymnasium.envs.registration import register
 from robosuite.environments.manipulation.single_arm_env import SingleArmEnv
 from robosuite.models.tasks import ManipulationTask
 from robosuite.models.arenas import TableArena
-from robosuite.models.objects import BoxObject, CylinderObject, MujocoXMLObject
+from robosuite.models.objects import BoxObject, CylinderObject, MujocoXMLObject, CerealObject, MilkObject
+from robosuite.models.objects import BottleObject, CanObject, PotWithHandlesObject
 from robosuite.models.objects import MujocoXMLObject
 from robosuite.controllers import load_controller_config
 from robosuite.utils.mjcf_utils import new_element
+import robosuite.utils.transform_utils as T
 from gym_hil.wrappers.intervention_utils import GamepadController
 
 os.environ['MUJOCO_GL'] = 'glx'
@@ -26,8 +32,9 @@ register(
 class DeskOrganizerRobosuiteEnv(SingleArmEnv):
     def __init__(self, **kwargs):
         kwargs.setdefault('task_desc', 'bing chilling')
-        self.task_desc = kwargs.pop("task_desc", "organize the items on the desk")
-        # Configure the Panda arm, gripper, and workspace
+        self.task_desc = kwargs.pop("task_desc")
+        self.target_object = kwargs.pop("target_object")
+        self.destination_object = kwargs.pop("destination_object")
         kwargs.setdefault("robots", "Panda")
         kwargs.setdefault("gripper_types", "PandaGripper")
         kwargs.setdefault("has_renderer", False)  
@@ -38,18 +45,69 @@ class DeskOrganizerRobosuiteEnv(SingleArmEnv):
         kwargs.setdefault("camera_widths", 256)
         kwargs.setdefault("render_camera", "frontview")
         kwargs.setdefault("control_freq", CONTROL_FREQ)
-        from robosuite.controllers import load_controller_config
         ctrl_config = load_controller_config(default_controller="OSC_POSE")
-        ctrl_config["kp"] = 2000  # increased from default 150 
+        # adjusting the kp values of the controller for snappier movement
+        ctrl_config["kp"] = [2000, 2000, 2000, 150, 150, 150]
         kwargs.setdefault("controller_configs", ctrl_config)
         self.height=0.9
+        import json
+        with open('item_registry.json', 'r') as f:
+            registry_data = json.load(f)
+
+        CLASS_MAP = {
+            "BoxObject": BoxObject,
+            "CylinderObject": CylinderObject,
+            "BottleObject": BottleObject,
+            "CanObject": CanObject,
+            "MilkObject": MilkObject,
+            "CerealObject": CerealObject,
+            "MujocoXMLObject": MujocoXMLObject
+        }
+
+        self.item_registry = {}
+        for key, val in registry_data.items():
+            self.item_registry[key] = {
+                "class": CLASS_MAP[val["class"]],
+                "kwargs": val["kwargs"]
+            }
+        
+
+        self.scene_items_input = {
+            "can"         : 0,
+            "mug_a"       : 0,
+            "pen_a"       : 0,
+            "pencil"      : 0,
+            "scissors"    : 0,
+            "highlighter" : 0,
+            "calculator"  : 0,
+            "holder_a"    : 0,
+            "mouse"       : 0,
+            "coaster_a"   : 0,
+            "mug_b"       : 0,
+            "spoon"       : 0,
+            "pad"         : 0,
+        }
+        # choosing objects to spawn at random; target and destination object are guaranteed.
+        self.scene_items_input[self.target_object] += 1
+        self.scene_items_input[self.destination_object] += 1
+        choice_list = list(self.scene_items_input.keys())*2
+        choice_list.remove(self.target_object)
+        choice_list.remove(self.destination_object)
+        for _ in range(5):
+            self.scene_items_input[choice(choice_list)] += 1
+
+        self.scene_items = [obj for obj in self.scene_items_input for _ in range(self.scene_items_input[obj])]
+        self.mujoco_objects = []
+        self.objects_dict = {}
+        self.object_ids = {}
         super().__init__(**kwargs)
 
-    def _return_randoms(self, items: list, x_max=0.3, x_min=0.0, y_max=0.4, y_min=-0.4, margin=0.1):
+    def _return_randoms(self, items: list, x_max=0.27, x_min=0.03, y_max=0.32, y_min=-0.32, margin=0.15):
         """
         Returns a set of random coordinates to place objects, separated by a minimum distance.
         """
         coords = {}
+        item_ctr = step_ctr = 0
         for item in items:
             too_close = True
             while too_close:
@@ -58,17 +116,34 @@ class DeskOrganizerRobosuiteEnv(SingleArmEnv):
                 for pair in coords.values():
                     if np.linalg.norm(pair - new) < margin:
                         too_close = True
+                step_ctr += 1
+                if step_ctr % 50000 == 49999:
+                    print(f"taking a long time to converge at {item_ctr}, reducing margin.")
+                    margin -= 0.02
             coords[item] = new
+            item_ctr += 1
+            step_ctr = 0
         return coords
         
 
     def _load_model(self):
         super()._load_model()
         
+        # increase actuator force
+        gripper_root = self.robots[0].gripper.root
+        for actuator in gripper_root.findall(".//actuator/position"):
+            if "gripper_finger_joint" in actuator.get("name", ""):
+                actuator.set("forcerange", "-140 140")
+                
+        # increase only torsional friction on the pads to prevent objects from spinning
+        for geom in gripper_root.findall(".//geom"):
+            if "pad_collision" in geom.get("name", ""):
+                geom.set("friction", "2 1.0 0.0001")
+        
         self.table_full_size = (0.5, 1, 0.05)
         self.table_offset = np.array((0.15, 0, self.height))
 
-        # Adjust the robot's base position so it sits on the table instead of the ground floor
+        # adjusting robot base position
         xpos = self.robots[0].robot_model.base_xpos_offset["table"](self.table_full_size[0])
         self.robots[0].robot_model.set_base_xpos(xpos)
         
@@ -79,7 +154,12 @@ class DeskOrganizerRobosuiteEnv(SingleArmEnv):
         )
         self.mujoco_arena.set_origin([0, 0, 0])
 
-        # Applying checkered texture to the table
+        for geom in self.mujoco_arena.worldbody.findall("./geom"):
+            if "wall" in geom.get("name", ""):
+                self.mujoco_arena.worldbody.remove(geom)
+            elif "floor" in geom.get("name", ""):
+                geom.set("rgba", "0 0 0 0")
+
         
         grid_tex = new_element("texture", name="desk_grid", type="2d", builtin="checker", 
                                rgb1="0.6 0.6 0.6", rgb2="0.5 0.5 0.5", width="512", height="512")
@@ -89,77 +169,143 @@ class DeskOrganizerRobosuiteEnv(SingleArmEnv):
         self.mujoco_arena.asset.append(grid_tex)
         self.mujoco_arena.asset.append(grid_mat)
         
+        hdri_directory = Path('assets/hdri')
+        hdris = [image for image in hdri_directory.iterdir()]
+
+        existing_skybox = self.mujoco_arena.asset.find("./texture[@type='skybox']")
+        hdri_path = os.path.abspath(choice(hdris))
+        
+        rotations = [
+            "RLUDFB",  # 0 deg
+            "BFUDRL",  # 90 deg
+            "LRUDBF",  # 180 deg
+            "FBUDLR"   # 270 deg
+        ]
+        
+        attribs = {
+            "type": "skybox",
+            "file": hdri_path,
+            "gridsize": "1 6",
+            "gridlayout": choice(rotations)
+        }
+        if existing_skybox is not None:
+            existing_skybox.attrib.clear()
+            existing_skybox.attrib.update(attribs)
+        else:
+            skybox = new_element("texture", **attribs)
+            self.mujoco_arena.asset.append(skybox)
+        
         table_visual = self.mujoco_arena.worldbody.find("./body[@name='table']/geom[@name='table_visual']")
         if table_visual is not None:
             table_visual.set("material", "desk_mat")
-
-        # Adjusting front view camera
 
         frontview = self.mujoco_arena.worldbody.find("./camera[@name='frontview']")
         if frontview is not None:
             frontview.set("pos", "1.5 0 1.55") 
             frontview.set("quat", "0.56 0.33 0.33 0.56")
 
-        # Creating objects
+        import xml.etree.ElementTree as ET
+        ET.SubElement(self.mujoco_arena.worldbody, "light", attrib={"pos": "0 0 1.5", "dir": "0 0 -1", "diffuse": "0.5 0.5 0.5"})
 
-        self.circle = CylinderObject(
-            name="circle",
-            size_min=(0.05, 0.001), # radius, half-height
-            size_max=(0.05, 0.001),
-            rgba=(0.8, 0.2, 0.2, 1.0),
-            friction=(1.0, 0.005, 0.0001),
-            joints=None
-        )
-        
-        self.blue_cube = BoxObject(
-            name="blue_cube",
-            size=(0.025, 0.025, 0.025), # half-sizes
-            rgba=(0.2, 0.2, 0.8, 1.0)
-        )
+        # creating objects
+        self.mujoco_objects = []
+        self.objects_dict = {}
 
-        self.yellow_cube = BoxObject(
-            name="yellow_cube",
-            size=(0.025, 0.025, 0.025), # half-sizes
-            rgba=(0.8, 0.8, 0.2, 1.0)
-        )
+        for i, name in enumerate(self.scene_items):
+            unique_name = name + '_' + str(i)
+            config = self.item_registry[name]
+            try:
+                config['kwargs']['rgba'] = (random(), random(), random(), 1.0)
+                obj = config['class'](name=unique_name, **config['kwargs'])
+            except:
+                del config['kwargs']['rgba']
+                obj = config['class'](name=unique_name, **config['kwargs'])
+                
+            # choosing a random texture for the coaster(s), if spawned.
+            if "coaster_a" in name:
+                for tex in obj.asset.findall("./texture"):
+                    if "T_Coaster_Color" in tex.get("name", ""):
+                        pattern = choice(['pattern1.png', 'pattern2.png', 'pattern3.png', 'pattern4.png'])
+                        tex.set("file", os.path.abspath(f"assets/models/coaster_a/{pattern}"))
+                        
+            self.mujoco_objects.append(obj)
+            self.objects_dict[unique_name] = obj
 
         self.model = ManipulationTask(
             mujoco_arena=self.mujoco_arena,
             mujoco_robots=[robot.robot_model for robot in self.robots],
-            mujoco_objects=[self.circle, self.blue_cube, self.yellow_cube]
+            mujoco_objects=self.mujoco_objects
         )
 
     def _setup_references(self):
         """Sets up references to important components/objects."""
         
         super()._setup_references()
+
+        for name, obj in self.objects_dict.items():
+            self.object_ids[name] = self.sim.model.body_name2id(obj.naming_prefix + "main")
         
-        self.circle_body_id = self.sim.model.body_name2id(self.circle.naming_prefix + "main")
-        self.blue_cube_body_id = self.sim.model.body_name2id(self.blue_cube.naming_prefix + "main")
-        self.yellow_cube_body_id = self.sim.model.body_name2id(self.yellow_cube.naming_prefix + "main")
-    
+    def _randomize_domain(self):
+        """
+        Applies domain randomization by varying lighting conditions, table colour, background and shadows.
+        """
+        model = self.sim.model
+
+        table_geom_id = model.geom_name2id("table_visual")
+        model.geom_rgba[table_geom_id] = [
+            np.random.uniform(0.25, 0.95),
+            np.random.uniform(0.25, 0.90),
+            np.random.uniform(0.20, 0.85),
+            1.0
+        ]
+
+        for i in range(model.nlight):
+            intensity = np.random.uniform(0.3, 1.2)
+
+            hue_tint = np.random.uniform(0.95, 1.05, 3)
+            model.light_diffuse[i] = np.clip(intensity * hue_tint, 0.0, 1.0)
+            model.light_specular[i] = np.clip(intensity * np.random.uniform(0.2, 0.5) * hue_tint, 0.0, 1.0)
+            model.light_ambient[i] = np.random.uniform(0.0, 0.1, 3)
+
+            model.light_dir[i] = np.array([
+                np.random.uniform(-1.0, 1.0),
+                np.random.uniform(-1.0, 1.0),
+                np.random.uniform(-1.5, -0.3),
+            ])
+
+            model.light_pos[i] += np.random.uniform(-0.5, 0.5, 3)
+
+            # occasionally toggle shadows to simulate hard lighting
+            if np.random.random() < 0.5:
+                model.light_castshadow[i] = 1
+            else:
+                model.light_castshadow[i] = 0
+
     def _reset_internal(self):
         """Sets initial placements."""
         
+        self.sim.model.vis.quality.shadowsize = 8192
+        
         super()._reset_internal()
 
-        coordinates = self._return_randoms(['blue_cube', 'yellow_cube', 'circle'])
-        
-        circle_x = coordinates['circle'][0]
-        circle_y = coordinates['circle'][1]
+        self._randomize_domain()
 
-        self.sim.data.set_joint_qpos(
-            self.blue_cube.naming_prefix + "joint0", 
-            [coordinates['blue_cube'][0], coordinates['blue_cube'][1], self.height+0.02, 0, 0, 0, 1]
-        )
+        coordinates = self._return_randoms(list(self.objects_dict.keys()))
 
-        self.sim.data.set_joint_qpos(
-            self.yellow_cube.naming_prefix + "joint0", 
-            [coordinates['yellow_cube'][0], coordinates['yellow_cube'][1], self.height+0.02, 0, 0, 0, 1]
-        )
-
-
-        self.sim.model.body_pos[self.circle_body_id] = [circle_x, circle_y, self.height+0.001]
+        for i, (name, obj) in enumerate(self.objects_dict.items()):
+            if obj.joints:
+                # only z-orientation is randomized
+                theta = np.random.uniform(0, 2 * np.pi)
+                qw = np.cos(theta / 2)
+                qz = np.sin(theta / 2)
+                
+                self.sim.data.set_joint_qpos(
+                    obj.naming_prefix + "joint0", 
+                    [coordinates[name][0], coordinates[name][1], self.height+0.05 , qw, 0, 0, qz]
+                )
+                time.sleep(0.03)
+            else:
+                self.sim.model.body_pos[self.object_ids[name]] = [coordinates[name][0], coordinates[name][1], self.height+0.001]
 
         self.sim.forward()
 
@@ -178,7 +324,7 @@ class DeskOrganizerRobosuiteEnv(SingleArmEnv):
         return img
 
 class DeskOrganizerEnv(gym.Env):
-    """Thin Gymnasium wrapper around DeskOrganizerRobosuiteEnv.
+    """Gymnasium wrapper around DeskOrganizerRobosuiteEnv.
       - Enables gym registry and data collection with LeRobot's gym_manipulator.
       - Re-keys observations into {"pixels": {...}, "robot_state": {...}}
       - LeRobot's LiberoProcessorStep, etc handles conversions, preprocessing and postprocessing.
@@ -187,17 +333,17 @@ class DeskOrganizerEnv(gym.Env):
     metadata = {"render_modes": ["rgb_array", "human"]}
 
     def __init__(self, task_desc="organize the items on the desk", render_mode=None,
-                 image_obs=True, use_gripper=True, gripper_penalty=0.0, 
-                 control_mode="auto", target_object="blue_cube", **kwargs):
+                 image_obs=True, use_gripper=True, gripper_penalty=0.0,  make_vertical=False,
+                 control_mode="auto", target_object="can", destination_object="holder_a", **kwargs):
         super().__init__()
         self.render_mode = render_mode
         self.task_description = task_desc
         self.use_gripper = use_gripper
         self.gripper_penalty = gripper_penalty
         self.control_mode = control_mode
-        self.target_object = target_object
+        self.make_vertical = make_vertical
         
-        # Path Planner State (for automated data collection in the simulation)
+        # initialising path planner state for automated data collection
         self._bot_state = 0
         self._bot_wait_ticks = 0
         self._bot_done = False
@@ -210,8 +356,14 @@ class DeskOrganizerEnv(gym.Env):
             "robot0_eye_in_hand_image": "image2",
         }
 
-        self._env = DeskOrganizerRobosuiteEnv(task_desc=task_desc, use_camera_obs=image_obs, **kwargs)
+        self._env = DeskOrganizerRobosuiteEnv(task_desc=task_desc,
+                                              use_camera_obs=image_obs, 
+                                              target_object=target_object, 
+                                              destination_object=destination_object, 
+                                              **kwargs)
 
+        self._env.target_object = target_object
+        self._env.destination_object = destination_object
         self._viewer = None
         
         config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "controller_config_new.json")
@@ -221,21 +373,19 @@ class DeskOrganizerEnv(gym.Env):
         )
         self._gamepad.start()
 
-        # Test if the gamepad actually works
         try:
             self._gamepad.update()
             self._has_gamepad = True
         except (AttributeError, Exception):
             self._has_gamepad = False
-            print("[INFO] No working gamepad detected — running in policy-only mode.")
+            print("No working gamepad detected, running in policy-only mode.")
 
-        # Define Gymnasium spaces
         obs_h, obs_w = 256, 256
         images_space = gym.spaces.Dict({
             "image": gym.spaces.Box(0, 255, shape=(obs_h, obs_w, 3), dtype=np.uint8),
             "image2": gym.spaces.Box(0, 255, shape=(obs_h, obs_w, 3), dtype=np.uint8),
         })
-        # Flat state: [eef_pos(3), eef_quat(4), gripper_qpos(2)] = 9 dimensions
+
         self.observation_space = gym.spaces.Dict({
             "pixels": images_space,
             "agent_pos": gym.spaces.Box(-np.inf, np.inf, shape=(9,), dtype=np.float32),
@@ -244,17 +394,33 @@ class DeskOrganizerEnv(gym.Env):
             low=-1.0, high=1.0, shape=(7,), dtype=np.float32
         )
 
+    @staticmethod
+    def _augment_image(img):
+        """
+        Apply subtle image augmentation for sim-to-real robustness. Currently disabled.
+        """
+        img = img.astype(np.float32)
+
+        # Gaussian noise (very subtle)
+        sigma = np.random.uniform(1.0, 4.0)
+        noise = np.random.normal(0, sigma, img.shape)
+        img = img + noise
+
+        # Color jitter (brightness, contrast, saturation) has been disabled.
+        return np.clip(img, 0, 255).astype(np.uint8)
+
     def _format_raw_obs(self, raw_obs):
         """
         Re-key Robosuite obs dict into the format preprocess_observation expects.
         """
         images = {}
         for robosuite_key, lerobot_key in self._camera_name_mapping.items():
-            # OpenGL returns images upside down, so we flip them vertically
-            images[lerobot_key] = np.flipud(raw_obs[robosuite_key]).copy()
+            img = np.flipud(raw_obs[robosuite_key]).copy()
+            img = self._augment_image(img)
+            images[lerobot_key] = img
 
         # Flatten EEF pose + gripper into a single 1D state vector (9 dims)
-        # This is what Pi0/Pi0.5 read as "observation.state"
+        # This is what pi0.5 read as "observation.state"
         agent_pos = np.concatenate([
             raw_obs["robot0_eef_pos"],       # (3,) xyz position
             raw_obs["robot0_eef_quat"],      # (4,) quaternion orientation
@@ -277,29 +443,27 @@ class DeskOrganizerEnv(gym.Env):
         self._bot_state = 0
         self._bot_wait_ticks = 0
         self._bot_done = False
-        self._bot_grasp_z_offset = np.random.uniform(-0.01, 0.01)
-        self._bot_lift_z_target = np.random.uniform(0.1, 0.15)
+        self._bot_start_eef_pos = None
+        self._bot_grasp_z_offset = -0.005 #np.random.uniform(0.005, 0.015)
+        self._bot_lift_z_target = np.random.uniform(0.2, 0.25)
         self._bot_open_time_offset = np.random.uniform(0.2, 0.7)
         self._bot_xy_jitter = np.zeros(2)
         self._bot_xy_jitter_target = np.random.uniform(-0.17, 0.17, size=2)
-        self._bot_drop_offset = np.random.uniform(-0.015, 0.015, size=2)
-        
+        self._bot_drop_offset = np.random.uniform(-0.005, 0.005, size=2)
         raw_obs = self._env.reset()
 
         for _ in range(5):
             raw_obs, _, _, _ = self._env.step(np.zeros(7))
 
-        # (Re-)create the MuJoCo GLFW viewer AFTER reset
+        # create the mujoco glfw viewer AFTER reset
         if self.render_mode == "human":
             if self._viewer is not None:
                 self._viewer.close()
             self._viewer = mujoco.viewer.launch_passive(
                 self._env.sim.model._model, self._env.sim.data._data
             )
-            # Hide collision geoms, show only visual meshes
             self._viewer.opt.geomgroup[0] = 0
             self._viewer.opt.geomgroup[1] = 1
-            # Hide site visualizations
             for i in range(6):
                 self._viewer.opt.sitegroup[i] = 0
 
@@ -307,15 +471,22 @@ class DeskOrganizerEnv(gym.Env):
  
     def _path_planner(self):
         """State machine for automated demonstration collection."""
-        target_body_id = self._env.blue_cube_body_id if self.target_object == "blue_cube" else self._env.yellow_cube_body_id
-        target_pos = self._env.sim.data.body_xpos[target_body_id]
-        circle_pos = self._env.sim.data.body_xpos[self._env.circle_body_id]
+        target_bodies = [name for name in self._env.objects_dict.keys() if self._env.target_object in name]
+        target_body_id = self._env.object_ids[target_bodies[0]]
+        target_pos = self._env.sim.data.body_xpos[target_body_id].copy()
+        
+        if any(name in self._env.target_object for name in ["mug_a", "mug_b", "holder_a"]):
+            target_pos[2] += 0.04
+        
+        destination_bodies = [name for name in self._env.objects_dict.keys() if self._env.destination_object in name]
+        destination_body_id = self._env.object_ids[destination_bodies[0]]
+        destination_pos = self._env.sim.data.body_xpos[destination_body_id].copy()
+        
         eef_pos = self._env.sim.data.site_xpos[self._env.robots[0].eef_site_id]
         
-        action = np.zeros(4, dtype=np.float32)
-        action[3] = 1.0
+        action = np.zeros(7, dtype=np.float32)
+        action[6] = 1.0
         
-        # Smoothly wander the XY jitter to mimic human joystick drift
         if self._env.timestep % 10 == 0:
             self._bot_xy_jitter_target = np.random.uniform(-0.02, 0.02, size=2)
         self._bot_xy_jitter += (self._bot_xy_jitter_target - self._bot_xy_jitter) * 0.15
@@ -333,65 +504,214 @@ class DeskOrganizerEnv(gym.Env):
         speed = 0.8
         
         if self._bot_state == 0:
-            hover_target = np.array([target_pos[0], target_pos[1], eef_pos[2]])
+            if self._bot_start_eef_pos is None:
+                self._bot_start_eef_pos = eef_pos.copy()
+                
+            approach_dir = target_pos[:2] - self._bot_start_eef_pos[:2]
+            norm_dir = np.linalg.norm(approach_dir)
+            if norm_dir > 0.001:
+                approach_dir = approach_dir / norm_dir
+            else:
+                approach_dir = np.zeros(2)
+                
+            overshoot_mm = 0.005  # move 5mm extra in the initial approach direction
+            
+            # STATE 0: hover directly above the target object
+            hover_target = np.array([target_pos[0] + approach_dir[0] * overshoot_mm, 
+                                     target_pos[1] + approach_dir[1] * overshoot_mm, 
+                                     eef_pos[2]])
             action[:3] = compute_dpos(hover_target, eef_pos, speed=speed, apply_jitter=True)
             
             dist_to_target = np.linalg.norm(hover_target[:2] - eef_pos[:2])
             if dist_to_target < self._bot_open_time_offset:
-                action[3] = 0.0
+                action[6] = 0.0
                 
             if dist_to_target < 0.02:
                 self._bot_state = 1
                 
         elif self._bot_state == 1:
-            action[3] = 0.0
-            self._bot_wait_ticks += 1
-            if self._bot_wait_ticks > 1:
+            if self._env.target_object in ["pen_a", "highlighter", "pencil", "highlighter", "spoon", "mouse", "calculator", "mug_b", "mug_a"]:
+            # STATE 1: rotate the gripper to align parallel with the object's long axis (skipped if the object is symmetric)
+                action[6] = 0.0
+
+                target_rmat = np.array(self._env.sim.data.body_xmat[target_body_id].reshape(3,3), dtype=np.float32)
+                eef_rmat = np.array(self._env.sim.data.site_xmat[self._env.robots[0].eef_site_id].reshape(3,3), dtype=np.float32)
+
+                v_target = target_rmat[:2, 0]
+                v_eef = eef_rmat[:2, 0]
+                v_target = v_target / (np.linalg.norm(v_target) + 1e-6)
+                v_eef = v_eef / (np.linalg.norm(v_eef) + 1e-6)
+
+                cross_prod = v_eef[0]*v_target[1] - v_eef[1]*v_target[0]
+                dot_prod = v_eef[0]*v_target[0] + v_eef[1]*v_target[1]
+                dyaw = np.arctan2(cross_prod, dot_prod)
+
+                #dyaw = dyaw - np.pi/2
+                dyaw = (dyaw + np.pi/2) % np.pi - np.pi/2
+
+                local_z = eef_rmat[:, 2]
+                action[3:6] = local_z * (-np.clip(dyaw * 1.5, -0.4, 0.4))
+
+                if abs(dyaw) < 0.05:
+                    self._bot_wait_ticks += 1
+                    if self._bot_wait_ticks > 5:
+                        self._bot_state = 2
+                        self._bot_wait_ticks = 0
+                else:
+                    self._bot_wait_ticks = 0
+
+            else:
                 self._bot_state = 2
-                self._bot_wait_ticks = 0
-                
         elif self._bot_state == 2:
-            action[3] = 0.0
+            # STATE 2: descend down to the object to grasp it
+            action[6] = 0.0
             descend_target = np.array([target_pos[0], target_pos[1], target_pos[2] + self._bot_grasp_z_offset])
             action[:3] = compute_dpos(descend_target, eef_pos, speed=speed)
             
-            if abs(descend_target[2] - eef_pos[2]) < 0.01:
+            if abs(eef_pos[2] - getattr(self, "_last_eef_z", 0.0)) < 0.0005:
+                self._bot_wait_ticks += 1
+            else:
+                self._bot_wait_ticks = 0
+            self._last_eef_z = eef_pos[2]
+            
+            # transition if reached target OR stuck against the table for 0.5s (10 ticks)
+            if abs(descend_target[2] - eef_pos[2]) < 0.01 or self._bot_wait_ticks > 10:
                 self._bot_state = 3
-                
-        elif self._bot_state == 3:
-            action[3] = 2.0
-            self._bot_wait_ticks += 1
-            if self._bot_wait_ticks > 6:
-                self._bot_state = 4
                 self._bot_wait_ticks = 0
                 
+        elif self._bot_state == 3:
+            # STATE 3: close the gripper fingers securely
+            action[6] = 2.0
+            self._bot_wait_ticks += 1
+            if self._bot_wait_ticks > 15:
+                self._bot_state = 4
+                self._bot_wait_ticks = 0
+                self._bot_grasp_z = eef_pos[2]
+                
         elif self._bot_state == 4:
-            action[3] = 2.0
-            lift_target = np.array([eef_pos[0], eef_pos[1], circle_pos[2] + self._bot_lift_z_target])
+            # STATE 4: lift the grasped object up into the air
+            action[6] = 2.0
+            lift_target = np.array([eef_pos[0], eef_pos[1], destination_pos[2] + self._bot_lift_z_target])
             action[:3] = compute_dpos(lift_target, eef_pos, speed=speed)
             
             if abs(lift_target[2] - eef_pos[2]) < 0.01:
                 self._bot_state = 5
                 
         elif self._bot_state == 5:
-            action[3] = 2.0
-            hover_circle = np.array([circle_pos[0] + self._bot_drop_offset[0], 
-                                     circle_pos[1] + self._bot_drop_offset[1], 
+            # STATE 5: carry the object over to the destination area
+            action[6] = 2.0
+            hover_circle = np.array([destination_pos[0] + self._bot_drop_offset[0], 
+                                     destination_pos[1] + self._bot_drop_offset[1], 
                                      eef_pos[2]])
             
             dist = np.linalg.norm(hover_circle[:2] - eef_pos[:2])
-            # Turn off jitter when within 4cm
-            action[:3] = compute_dpos(hover_circle, eef_pos, speed=speed, apply_jitter=(dist > 0.04))
+            action[:3] = compute_dpos(hover_circle, eef_pos, speed=speed, apply_jitter=False)
             
-            # Require it to get close before dropping
-            if dist < 0.015:
+            if dist < 0.01:
                 self._bot_state = 6
-                
+
         elif self._bot_state == 6:
-            action[3] = 0.0
+            # STATE 6: descend slightly before making vertical or dropping
+            if self._env.destination_object in ["coaster_a", "pad"]:
+                action[6] = 2.0
+                target_z = getattr(self, "_bot_grasp_z", eef_pos[2]) + 0.02
+                #descend_target = np.array([eef_pos[0], eef_pos[1], target_z])
+                descend_target = np.array([destination_pos[0] + self._bot_drop_offset[0],
+                                           destination_pos[1] + self._bot_drop_offset[1], 
+                                           target_z])
+                action[:3] = compute_dpos(descend_target, eef_pos, speed=speed)
+                
+                if abs(eef_pos[2] - getattr(self, "_last_eef_z", 0.0)) < 0.0005:
+                    self._bot_wait_ticks += 1
+                else:
+                    self._bot_wait_ticks = 0
+                self._last_eef_z = eef_pos[2]
+                
+                if abs(descend_target[2] - eef_pos[2]) < 0.01 or self._bot_wait_ticks > 10:
+                    self._bot_state = 7
+                    self._bot_wait_ticks = 0
+            else:
+                action[6] = 2.0
+                if not hasattr(self, "_bot_descend_target_z"):
+                    self._bot_descend_target_z = eef_pos[2] - 0.03
+                
+                descend_target = np.array([eef_pos[0], eef_pos[1], self._bot_descend_target_z])
+                action[:3] = compute_dpos(descend_target, eef_pos, speed=speed)
+                
+                if abs(eef_pos[2] - getattr(self, "_last_eef_z", 0.0)) < 0.0005:
+                    self._bot_wait_ticks += 1
+                else:
+                    self._bot_wait_ticks = 0
+                self._last_eef_z = eef_pos[2]
+                
+                if abs(descend_target[2] - eef_pos[2]) < 0.01 or self._bot_wait_ticks > 10:
+                    self._bot_state = 7
+                    self._bot_wait_ticks = 0
+                    del self._bot_descend_target_z
+                    
+        elif self._bot_state == 7:
+            # STATE 7: make vertical - rotate until object's x axis is perpendicular to the table. only for tasks involving putting narrow objects in containers.
+            action[6] = 2.0
+            
+            if not hasattr(self, "_bot_rotation_z"):
+                self._bot_rotation_z = eef_pos[2]
+            
+            # # Keep position stable while rotating
+            # dest_body_name = [name for name in self._env.sim.model.body_names if self._env.destination_object in name][0]
+            # hover_circle = np.array([self._env.sim.data.body_xpos[self._env.sim.model.body_name2id(dest_body_name)][0] + self._bot_drop_offset[0], 
+            #                          self._env.sim.data.body_xpos[self._env.sim.model.body_name2id(dest_body_name)][1] + self._bot_drop_offset[1], 
+            #                          self._bot_rotation_z])
+            # action[:3] = compute_dpos(hover_circle, eef_pos, speed=speed)
+
+            hover_circle = np.array([destination_pos[0] + self._bot_drop_offset[0], 
+                                     destination_pos[1] + self._bot_drop_offset[1], 
+                                     eef_pos[2]])
+            
+            dist = np.linalg.norm(hover_circle[:2] - eef_pos[:2])
+            action[:3] = compute_dpos(hover_circle, eef_pos, speed=speed, apply_jitter=False)
+
+            if self.make_vertical:
+                target_bodies = [name for name in self._env.sim.model.body_names if self._env.target_object in name]
+                target_body_id = self._env.sim.model.body_name2id(target_bodies[0])
+                target_rmat = np.array(self._env.sim.data.body_xmat[target_body_id].reshape(3,3), dtype=np.float32)
+                
+                target_long_axis = target_rmat[:, 1]
+                z_component = target_long_axis[2]
+                
+                if abs(z_component) > 0.72 or getattr(self, "_bot_state7_ticks", 0) > 80:
+                    self._bot_wait_ticks += 1
+                    if self._bot_wait_ticks > 5:
+                        action[3:6] = np.zeros(3)
+                        xy_err = np.linalg.norm(hover_circle[:2] - eef_pos[:2])
+                        if xy_err < 0.015:
+                            self._bot_state = 8
+                        else:
+                            self._bot_state = 5
+                        self._bot_wait_ticks = 0
+                        self._bot_state7_ticks = 0
+                        del self._bot_rotation_z
+                else:
+                    self._bot_state7_ticks = getattr(self, "_bot_state7_ticks", 0) + 1
+                    self._bot_wait_ticks = 0
+                    xy_err = np.linalg.norm(hover_circle[:2] - eef_pos[:2])
+                    if xy_err < 0.015:
+                        desired_dir = np.array([0.0, 0.0, 1.0]) if z_component > 0 else np.array([0.0, 0.0, -1.0])
+                        rot_axis = np.cross(target_long_axis, desired_dir)
+                        rot_axis_norm = np.linalg.norm(rot_axis)
+                        
+                        if rot_axis_norm > 5e-3:
+                            action[3:6] = (rot_axis / rot_axis_norm) * 1
+            else:
+                self._bot_state = 8
+                self._bot_wait_ticks = 0
+                del self._bot_rotation_z
+                
+        elif self._bot_state == 8:
+            # STATE 8: open the gripper to drop the object and finish
+            action[6] = 0.0
             self._bot_wait_ticks += 1
-            if self._bot_wait_ticks > 8:
-                self._bot_state = 7
+            if self._bot_wait_ticks > 40:
+                self._bot_state = 9
                 self._bot_done = True
                 
         return action
@@ -399,7 +719,6 @@ class DeskOrganizerEnv(gym.Env):
     def step(self, action):
         """Steps the environment and introduces gamepad/automated teleoperation commands, if enabled."""
         action = np.asarray(action, dtype=np.float32)
-        self._env.timestep += 1
 
         is_intervention = False
         episode_end_status = None
@@ -438,13 +757,21 @@ class DeskOrganizerEnv(gym.Env):
         rerecord_episode = episode_end_status == "rerecord_episode"
 
         # gym_manipulator sends 4D actions: [dx, dy, dz, gripper]
-        # robosuite OSC_POSE expects 7D: [dx, dy, dz, drot_x, drot_y, drot_z, gripper]
-        if action.shape[-1] == 4:
+        # 7D: [dx, dy, dz, drot_x, drot_y, drot_z, gripper]
+        if action.shape[-1] == 7:
+            pos = action[:3] * EE_STEP_SIZE
+            rot = action[3:6]
+            grip = np.array([action[6] - 1.0])
+            action = np.concatenate([pos, rot, grip])
+            #pass
+            # the above lines must be disabled during inference.
+        elif action.shape[-1] == 4:
             pos = action[:3] * EE_STEP_SIZE
             rot = np.zeros(3, dtype=np.float32)    # no rotation control
             grip = np.array([action[3] - 1.0])     # map [0,2] → [-1,1]
             action = np.concatenate([pos, rot, grip])
 
+        executed_action = action[:7].copy()
         raw_obs, reward, done, info = self._env.step(action[:7])
 
         if self._viewer is not None and self._viewer.is_running():
@@ -461,6 +788,7 @@ class DeskOrganizerEnv(gym.Env):
             "is_success": is_success,
             "is_intervention": is_intervention,
             "teleop_action": gamepad_action,
+            "executed_action": executed_action,
             "rerecord_episode": rerecord_episode,
         })
         return self._format_raw_obs(raw_obs), reward, terminated, truncated, info
@@ -486,29 +814,32 @@ if __name__ == "__main__":
     
     print("Initializing DeskOrganizerEnv...")
     
-    # has_renderer=True for opencv rendering
-    env = DeskOrganizerRobosuiteEnv(
+    env = DeskOrganizerEnv(
         has_renderer=True,
         render_camera='frontview',
         has_offscreen_renderer=True,
-        use_camera_obs=True,
+        image_obs=True,
         control_freq=20,
-        horizon=500
+        horizon=500,
+        target_object='calculator',
+        destination_object='pad',
+        make_vertical=False,
     )
-    
     obs = env.reset()
     
-    # mujoco 3d viewer
-    print("Launching native MuJoCo GLFW passive viewer...")
-    viewer = mujoco.viewer.launch_passive(env.sim.model._model, env.sim.data._data)
+    viewer = mujoco.viewer.launch_passive(env._env.sim.model._model, env._env.sim.data._data)
     viewer.opt.geomgroup[0] = 0
-    viewer.opt.geomgroup[1] = 1  # Ensure visual meshes are enabled
+    viewer.opt.geomgroup[1] = 1
+    
+    viewer.cam.azimuth = 140
+    viewer.cam.elevation = -40
+    viewer.cam.distance = 1.0
+    viewer.cam.lookat[:] = [0.1, 0.0, 0.85]
 
     print("Running simulation loop. Press Ctrl+C to terminate.")
     start = time.time()
     try:
         while True:
-            # circular motion
             current = time.time()
             if (current-start) % 4 < 1:
                 dx,dy = 0,1
@@ -518,25 +849,18 @@ if __name__ == "__main__":
                 dx,dy = 0,-1
             else:
                 dx,dy = -1,0
-            #dx = 0.5 * np.sin(t_seconds)
-            #dy = 0.5 * np.cos(t_seconds)
 
-            action = np.array([dx, dy, 0.0, 0.0, 0.0, 0.0, -1.0]) # Gripper closed
-            #print(action, ' ||||||| ', action.dtype)
+            action = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0])
             
-            # Step the simulation (Gymnasium returns 5-tuple)
-            obs, reward, terminated, info = env.step(action) # add truncated if using gym wrapper
-            done = terminated #or truncated
+            obs, reward, terminated, truncated, info = env.step(action) # add truncated if using gym wrapper
+            done = terminated or truncated
             
-            # 3d viewer update
             if viewer is not None and viewer.is_running():
                 viewer.sync()
             
-            # opencv cam render
-            env.render()
+            #env.render()
             
-            # Maintain a realistic timestep rate
-            time.sleep(1.0 / env.control_freq)
+            time.sleep(1.0 / env._env.control_freq)
             
             if done:
                 print("Episode finished. Resetting...")
