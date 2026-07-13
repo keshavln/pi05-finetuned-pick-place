@@ -1,0 +1,26 @@
+<mujoco model="highlighter">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="15 15 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <material name="PLASTIC_BLACK" specular="0.5" shininess="0.5" rgba="0.000000 0.000000 0.000000 1.000000"/>
+    <material name="yelow_marker" specular="0.5" shininess="0.5" rgba="1.000000 0.875627 0.000000 1.000000"/>
+    <mesh file="highlighter_0.obj" name="highlighter_0"/>
+    <mesh file="highlighter_1.obj" name="highlighter_1"/>
+    <mesh file="highlighter_collision_0.obj" name="highlighter_collision_0"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+      <geom mesh="highlighter_0" material="yelow_marker" class="visual"/>
+      <geom mesh="highlighter_1" material="PLASTIC_BLACK" class="visual"/>
+      <geom mesh="highlighter_collision_0" rgba="1 0 0 0" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

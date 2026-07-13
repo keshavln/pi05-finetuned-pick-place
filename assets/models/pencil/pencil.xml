@@ -1,0 +1,29 @@
+<mujoco model="pencil">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="15 15 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <material name="granite" specular="0.5" shininess="0.5" rgba="0.052712 0.052712 0.052712 1.000000"/>
+    <material name="pencil_paint" specular="0.5" shininess="0.5" rgba="0.563541 0.378081 0.000000 1.000000"/>
+    <material name="wood_pencil" specular="0.5" shininess="0.5" rgba="0.800000 0.800000 0.800000 1.000000"/>
+    <mesh file="pencil_0.obj" name="pencil_0"/>
+    <mesh file="pencil_1.obj" name="pencil_1"/>
+    <mesh file="pencil_2.obj" name="pencil_2"/>
+    <mesh file="pencil_collision_0.obj" name="pencil_collision_0"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+      <geom mesh="pencil_0" material="pencil_paint" class="visual"/>
+      <geom mesh="pencil_1" material="granite" class="visual"/>
+      <geom mesh="pencil_2" material="wood_pencil" class="visual"/>
+      <geom mesh="pencil_collision_0" rgba="1 0 0 0" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

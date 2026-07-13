@@ -1,0 +1,32 @@
+<mujoco model="mouse">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="5 10 0.01"/>
+    </default>
+  </default>
+  <asset>
+    <material name="Mouse_-_Mat_Grey" specular="0.5" shininess="0.5" rgba="0.040000 0.040000 0.040000 1.000000"/>
+    <material name="Mouse_-_Shiny_Grey" specular="0.5" shininess="0.5" rgba="0.035000 0.035000 0.035000 1.000000"/>
+    <material name="Mouse_-_Wheel_Grey" specular="0.5" shininess="0.5" rgba="0.040000 0.040000 0.040000 1.000000"/>
+    <mesh file="mouse_0.obj" name="mouse_0"/>
+    <mesh file="mouse_1.obj" name="mouse_1"/>
+    <mesh file="mouse_2.obj" name="mouse_2"/>
+    <mesh file="mouse_collision_0.obj" name="mouse_collision_0"/>
+    <mesh file="mouse_collision_1.obj" name="mouse_collision_1"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+      <inertial mass="0.2" pos="0 0 0" diaginertia="10 10 0.001" />
+      <geom mesh="mouse_0" material="Mouse_-_Shiny_Grey" class="visual"/>
+      <geom mesh="mouse_1" material="Mouse_-_Mat_Grey" class="visual"/>
+      <geom mesh="mouse_2" material="Mouse_-_Wheel_Grey" class="visual"/>
+      <geom mesh="mouse_collision_0" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mouse_collision_1" rgba="1 0 0 0" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="scissors">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0" />
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" contype="1" conaffinity="1"  solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="5 2 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <material name="PLASTIC_BLACK" specular="0.5" shininess="0.5" rgba="0.000000 0.000000 0.000000 1.000000" />
+    <material name="metal" specular="0.5" shininess="0.5" rgba="0.800000 0.800000 0.800000 1.000000" />
+    <material name="plastic_grey" specular="0.5" shininess="0.5" rgba="0.179368 0.179368 0.179368 1.000000" />
+    <mesh file="scissors_0.obj" name="scissors_0" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_1.obj" name="scissors_1" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_2.obj" name="scissors_2" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_0.obj" name="scissors_collision_0" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_1.obj" name="scissors_collision_1" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_2.obj" name="scissors_collision_2" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_3.obj" name="scissors_collision_3" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_4.obj" name="scissors_collision_4" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_5.obj" name="scissors_collision_5" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_6.obj" name="scissors_collision_6" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_7.obj" name="scissors_collision_7" scale="1.25 1.25 1.25" />
+    <mesh file="scissors_collision_8.obj" name="scissors_collision_8" scale="1.25 1.25 1.25" />
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+        <body name="auto_center" pos="-0.000662 -0.101268 0">
+          <geom mesh="scissors_0" material="PLASTIC_BLACK" class="visual" />
+          <geom mesh="scissors_1" material="plastic_grey" class="visual" />
+          <geom mesh="scissors_2" material="metal" class="visual" />
+          <geom mesh="scissors_collision_0" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_1" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_2" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_3" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_4" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_5" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_6" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_7" rgba="1 0 0 0" class="collision" />
+          <geom mesh="scissors_collision_8" rgba="1 0 0 0" class="collision" />
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

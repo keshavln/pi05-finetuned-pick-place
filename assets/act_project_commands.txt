@@ -1,0 +1,70 @@
+hf_REDACTED
+
+
+command to delete certain episodes:
+
+lerobot-edit-dataset \
+  --repo_id KeshavLN/panda_pick_place_new \
+  --operation.type delete_episodes \
+  --operation.episode_indices "[0,2,4,5,6,9,14,24,25,30,41,44,45,46,47,49,56,64,65]" \
+  --push_to_hub true
+
+command to record:
+
+rm -rf /home/keshav/.cache/huggingface/lerobot/KeshavLN/panda_pick_place_new
+python -m lerobot.rl.gym_manipulator --config_path test_config.json
+
+
+NOTE: - to change episode length, edit gym-hil/gym_hil/__init__.py line 87
+      - go to intervention_utils.py to change keybinds
+
+command to view:
+
+python -m lerobot.scripts.lerobot_dataset_viz   --repo-id KeshavLN/panda_pick_place_new   --episode-index 1
+python -m lerobot.scripts.lerobot_dataset_viz   --repo-id yiqing93/test_gym_hil_put_cube_5   --episode-index 16
+
+
+command to merge repos:
+
+lerobot-edit-dataset \
+  --repo_id KeshavLN/panda_pick_place_merged \
+  --operation.type merge \
+  --operation.repo_ids "['KeshavLN/panda_pick_place', 'KeshavLN/panda_pick_place_2', 'KeshavLN/panda_pick_place_3', 'KeshavLN/panda_pick_place_4', 'KeshavLN/panda_pick_place_5']" \
+  --push_to_hub true
+
+train:
+
+python src/lerobot/scripts/lerobot_train.py \
+  --dataset.repo_id=KeshavLN/panda_pick_place_new \
+  --policy.repo_id=KeshavLN/panda_act_policy_2 \
+  --policy.type=act \
+  --output_dir=outputs/train/panda_act_2 \
+  --policy.device=cuda \
+  --batch_size=8 \
+  --steps=50000 \
+  --wandb.enable=false
+
+
+resume training:
+
+python src/lerobot/scripts/lerobot_train.py \
+  --config_path=outputs/train/panda_act_new/checkpoints/last/pretrained_model/train_config.json \
+  --resume=true
+
+evaluation:
+
+python src/lerobot/scripts/lerobot_eval.py \
+  --policy.path=outputs/train/panda_act_2/checkpoints/last/pretrained_model \
+  --eval.n_episodes=3 \
+  --eval.batch_size=1 \
+  --env.type=gym_manipulator \
+  --env.name=gym_hil \
+  --env.task=PandaPickCubeBase-v0 \
+  --env.fps=10 \
+  --policy.n_action_steps=1 \
+  --policy.temporal_ensemble_coeff=0.01
+
+NOTE: Decreasing number of action steps made the movements more jerky but more accurate, actually producing some success.
+
+
+  'aloha', 'pusht', 'gym_manipulator', 'libero', 'metaworld'

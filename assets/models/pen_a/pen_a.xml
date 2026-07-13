@@ -1,0 +1,26 @@
+<mujoco model="pen_a">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="15 15 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <material name="METAL_CHROME" specular="0.5" shininess="0.5" rgba="0.800000 0.800000 0.800000 1.000000"/>
+    <material name="metalic_blue.001" specular="0.5" shininess="0.5" rgba="0.000000 0.017088 0.645726 1.000000"/>
+    <mesh file="pen_a_0.obj" name="pen_a_0"/>
+    <mesh file="pen_a_1.obj" name="pen_a_1"/>
+    <mesh file="pen_a_collision_0.obj" name="pen_a_collision_0"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+      <geom mesh="pen_a_0" material="metalic_blue.001" class="visual"/>
+      <geom mesh="pen_a_1" material="METAL_CHROME" class="visual"/>
+      <geom mesh="pen_a_collision_0" rgba="1 0 0 0" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

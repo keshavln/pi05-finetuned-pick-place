@@ -1,0 +1,120 @@
+<mujoco model="mug_a">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="5 2 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <material name="MugColor5" specular="0.5" shininess="0.5" rgba="0.32 0.8509 0.8509 1.000000"/>
+    <material name="MugWhite" specular="0.5" shininess="0.5" rgba="0.896395 0.896395 0.896395 1.000000"/>
+    <mesh file="mug_a_0.obj" name="mug_a_0" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_1.obj" name="mug_a_1" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_0.obj" name="mug_a_collision_0" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_1.obj" name="mug_a_collision_1" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_2.obj" name="mug_a_collision_2" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_3.obj" name="mug_a_collision_3" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_4.obj" name="mug_a_collision_4" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_5.obj" name="mug_a_collision_5" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_6.obj" name="mug_a_collision_6" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_7.obj" name="mug_a_collision_7" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_8.obj" name="mug_a_collision_8" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_9.obj" name="mug_a_collision_9" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_10.obj" name="mug_a_collision_10" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_11.obj" name="mug_a_collision_11" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_12.obj" name="mug_a_collision_12" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_13.obj" name="mug_a_collision_13" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_14.obj" name="mug_a_collision_14" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_15.obj" name="mug_a_collision_15" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_16.obj" name="mug_a_collision_16" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_17.obj" name="mug_a_collision_17" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_18.obj" name="mug_a_collision_18" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_19.obj" name="mug_a_collision_19" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_20.obj" name="mug_a_collision_20" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_21.obj" name="mug_a_collision_21" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_22.obj" name="mug_a_collision_22" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_23.obj" name="mug_a_collision_23" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_24.obj" name="mug_a_collision_24" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_25.obj" name="mug_a_collision_25" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_26.obj" name="mug_a_collision_26" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_27.obj" name="mug_a_collision_27" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_28.obj" name="mug_a_collision_28" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_29.obj" name="mug_a_collision_29" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_30.obj" name="mug_a_collision_30" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_31.obj" name="mug_a_collision_31" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_32.obj" name="mug_a_collision_32" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_33.obj" name="mug_a_collision_33" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_34.obj" name="mug_a_collision_34" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_35.obj" name="mug_a_collision_35" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_36.obj" name="mug_a_collision_36" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_37.obj" name="mug_a_collision_37" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_38.obj" name="mug_a_collision_38" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_39.obj" name="mug_a_collision_39" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_40.obj" name="mug_a_collision_40" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_41.obj" name="mug_a_collision_41" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_42.obj" name="mug_a_collision_42" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_43.obj" name="mug_a_collision_43" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_44.obj" name="mug_a_collision_44" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_45.obj" name="mug_a_collision_45" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_46.obj" name="mug_a_collision_46" scale="0.7 0.7 0.7"/>
+    <mesh file="mug_a_collision_47.obj" name="mug_a_collision_47" scale="0.7 0.7 0.7"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+      <geom mesh="mug_a_0" material="MugColor5" class="visual"/>
+      <geom mesh="mug_a_1" material="MugWhite" class="visual"/>
+      <geom mesh="mug_a_collision_0" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_1" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_2" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_3" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_4" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_5" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_6" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_7" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_8" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_9" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_10" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_11" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_12" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_13" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_14" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_15" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_16" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_17" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_18" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_19" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_20" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_21" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_22" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_23" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_24" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_25" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_26" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_27" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_28" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_29" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_30" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_31" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_32" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_33" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_34" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_35" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_36" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_37" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_38" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_39" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_40" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_41" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_42" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_43" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_44" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_45" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_46" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="mug_a_collision_47" rgba="1 0 0 0" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

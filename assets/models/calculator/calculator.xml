@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="calculator">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0" />
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" contype="1" conaffinity="1"  solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="5 2 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <texture type="2d" name="calculator_mat_BaseColor" file="calculator_mat_BaseColor.png" />
+    <material name="calculator_mat.001" texture="calculator_mat_BaseColor" specular="0.5" shininess="0.5" />
+    <mesh file="calculator.obj" name="calculator" scale="0.4 0.4 0.4"/>
+    <mesh file="calculator_collision_0.obj" name="calculator_collision_0" scale="0.4 0.4 0.4"/>
+    <mesh file="calculator_collision_1.obj" name="calculator_collision_1" scale="0.4 0.4 0.4"/>
+    <mesh file="calculator_collision_2.obj" name="calculator_collision_2" scale="0.4 0.4 0.4"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+        <body name="auto_center" pos="-0.000000 -0.014522 0" euler="0 0 3.140390">
+          <geom material="calculator_mat.001" mesh="calculator" class="visual" />
+          <geom mesh="calculator_collision_0" rgba="1 0 0 0" class="collision" />
+          <geom mesh="calculator_collision_1" rgba="1 0 0 0" class="collision" />
+          <geom mesh="calculator_collision_2" rgba="1 0 0 0" class="collision" />
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

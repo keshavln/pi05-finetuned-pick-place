@@ -1,0 +1,33 @@
+<mujoco model="spoon">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="5 5 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <material name="spoonmetal" specular="0.5" shininess="0.5" rgba="0.460235 0.460235 0.460235 1.000000"/>
+    <mesh file="spoon.obj" name="spoon" scale="0.5 0.5 0.5"/>
+    <mesh file="spoon_collision_0.obj" name="spoon_collision_0" scale="0.5 0.5 0.5"/>
+    <mesh file="spoon_collision_1.obj" name="spoon_collision_1" scale="0.5 0.5 0.5"/>
+    <mesh file="spoon_collision_2.obj" name="spoon_collision_2" scale="0.5 0.5 0.5"/>
+    <mesh file="spoon_collision_3.obj" name="spoon_collision_3" scale="0.5 0.5 0.5"/>
+    <mesh file="spoon_collision_4.obj" name="spoon_collision_4" scale="0.5 0.5 0.5"/>
+    <mesh file="spoon_collision_5.obj" name="spoon_collision_5" scale="0.5 0.5 0.5"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+      <geom material="spoonmetal" mesh="spoon" class="visual"/>
+      <geom mesh="spoon_collision_0" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="spoon_collision_1" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="spoon_collision_2" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="spoon_collision_3" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="spoon_collision_4" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="spoon_collision_5" rgba="1 0 0 0" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

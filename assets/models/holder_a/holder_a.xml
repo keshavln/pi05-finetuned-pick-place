@@ -1,0 +1,243 @@
+<mujoco model="holder_a">
+  <default>
+    <default class="visual">
+      <geom group="1" type="mesh" contype="0" conaffinity="0"/>
+    </default>
+    <default class="collision">
+      <geom group="0" type="mesh" solref="0.01 1" solimp="0.99 0.99 0.01" margin="0.001" priority="1" friction="15 15 0.0001"/>
+    </default>
+  </default>
+  <asset>
+    <material name="metalic_blue" specular="0.5" shininess="0.5" rgba="0.205431 0.593597 0.010613 1.000000"/>
+    <mesh file="holder_a.obj" name="holder_a" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_0.obj" name="holder_a_collision_0" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_1.obj" name="holder_a_collision_1" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_2.obj" name="holder_a_collision_2" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_3.obj" name="holder_a_collision_3" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_4.obj" name="holder_a_collision_4" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_5.obj" name="holder_a_collision_5" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_6.obj" name="holder_a_collision_6" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_7.obj" name="holder_a_collision_7" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_8.obj" name="holder_a_collision_8" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_9.obj" name="holder_a_collision_9" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_10.obj" name="holder_a_collision_10" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_11.obj" name="holder_a_collision_11" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_12.obj" name="holder_a_collision_12" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_13.obj" name="holder_a_collision_13" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_14.obj" name="holder_a_collision_14" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_15.obj" name="holder_a_collision_15" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_16.obj" name="holder_a_collision_16" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_17.obj" name="holder_a_collision_17" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_18.obj" name="holder_a_collision_18" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_19.obj" name="holder_a_collision_19" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_20.obj" name="holder_a_collision_20" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_21.obj" name="holder_a_collision_21" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_22.obj" name="holder_a_collision_22" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_23.obj" name="holder_a_collision_23" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_24.obj" name="holder_a_collision_24" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_25.obj" name="holder_a_collision_25" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_26.obj" name="holder_a_collision_26" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_27.obj" name="holder_a_collision_27" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_28.obj" name="holder_a_collision_28" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_29.obj" name="holder_a_collision_29" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_30.obj" name="holder_a_collision_30" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_31.obj" name="holder_a_collision_31" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_32.obj" name="holder_a_collision_32" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_33.obj" name="holder_a_collision_33" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_34.obj" name="holder_a_collision_34" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_35.obj" name="holder_a_collision_35" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_36.obj" name="holder_a_collision_36" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_37.obj" name="holder_a_collision_37" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_38.obj" name="holder_a_collision_38" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_39.obj" name="holder_a_collision_39" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_40.obj" name="holder_a_collision_40" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_41.obj" name="holder_a_collision_41" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_42.obj" name="holder_a_collision_42" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_43.obj" name="holder_a_collision_43" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_44.obj" name="holder_a_collision_44" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_45.obj" name="holder_a_collision_45" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_46.obj" name="holder_a_collision_46" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_47.obj" name="holder_a_collision_47" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_48.obj" name="holder_a_collision_48" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_49.obj" name="holder_a_collision_49" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_50.obj" name="holder_a_collision_50" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_51.obj" name="holder_a_collision_51" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_52.obj" name="holder_a_collision_52" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_53.obj" name="holder_a_collision_53" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_54.obj" name="holder_a_collision_54" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_55.obj" name="holder_a_collision_55" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_56.obj" name="holder_a_collision_56" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_57.obj" name="holder_a_collision_57" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_58.obj" name="holder_a_collision_58" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_59.obj" name="holder_a_collision_59" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_60.obj" name="holder_a_collision_60" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_61.obj" name="holder_a_collision_61" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_62.obj" name="holder_a_collision_62" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_63.obj" name="holder_a_collision_63" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_64.obj" name="holder_a_collision_64" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_65.obj" name="holder_a_collision_65" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_66.obj" name="holder_a_collision_66" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_67.obj" name="holder_a_collision_67" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_68.obj" name="holder_a_collision_68" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_69.obj" name="holder_a_collision_69" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_70.obj" name="holder_a_collision_70" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_71.obj" name="holder_a_collision_71" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_72.obj" name="holder_a_collision_72" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_73.obj" name="holder_a_collision_73" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_74.obj" name="holder_a_collision_74" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_75.obj" name="holder_a_collision_75" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_76.obj" name="holder_a_collision_76" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_77.obj" name="holder_a_collision_77" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_78.obj" name="holder_a_collision_78" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_79.obj" name="holder_a_collision_79" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_80.obj" name="holder_a_collision_80" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_81.obj" name="holder_a_collision_81" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_82.obj" name="holder_a_collision_82" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_83.obj" name="holder_a_collision_83" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_84.obj" name="holder_a_collision_84" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_85.obj" name="holder_a_collision_85" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_86.obj" name="holder_a_collision_86" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_87.obj" name="holder_a_collision_87" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_88.obj" name="holder_a_collision_88" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_89.obj" name="holder_a_collision_89" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_90.obj" name="holder_a_collision_90" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_91.obj" name="holder_a_collision_91" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_92.obj" name="holder_a_collision_92" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_93.obj" name="holder_a_collision_93" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_94.obj" name="holder_a_collision_94" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_95.obj" name="holder_a_collision_95" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_96.obj" name="holder_a_collision_96" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_97.obj" name="holder_a_collision_97" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_98.obj" name="holder_a_collision_98" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_99.obj" name="holder_a_collision_99" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_100.obj" name="holder_a_collision_100" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_101.obj" name="holder_a_collision_101" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_102.obj" name="holder_a_collision_102" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_103.obj" name="holder_a_collision_103" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_104.obj" name="holder_a_collision_104" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_105.obj" name="holder_a_collision_105" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_106.obj" name="holder_a_collision_106" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_107.obj" name="holder_a_collision_107" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_108.obj" name="holder_a_collision_108" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_109.obj" name="holder_a_collision_109" scale="0.75 0.75 0.75"/>
+    <mesh file="holder_a_collision_110.obj" name="holder_a_collision_110" scale="0.75 0.75 0.75"/>
+  </asset>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <body name="object">
+      <geom material="metalic_blue" mesh="holder_a" class="visual"/>
+      <geom mesh="holder_a_collision_0" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_1" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_2" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_3" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_4" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_5" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_6" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_7" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_8" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_9" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_10" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_11" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_12" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_13" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_14" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_15" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_16" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_17" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_18" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_19" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_20" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_21" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_22" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_23" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_24" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_25" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_26" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_27" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_28" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_29" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_30" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_31" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_32" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_33" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_34" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_35" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_36" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_37" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_38" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_39" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_40" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_41" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_42" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_43" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_44" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_45" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_46" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_47" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_48" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_49" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_50" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_51" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_52" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_53" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_54" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_55" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_56" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_57" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_58" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_59" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_60" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_61" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_62" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_63" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_64" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_65" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_66" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_67" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_68" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_69" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_70" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_71" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_72" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_73" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_74" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_75" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_76" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_77" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_78" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_79" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_80" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_81" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_82" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_83" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_84" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_85" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_86" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_87" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_88" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_89" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_90" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_91" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_92" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_93" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_94" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_95" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_96" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_97" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_98" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_99" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_100" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_101" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_102" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_103" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_104" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_105" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_106" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_107" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_108" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_109" rgba="1 0 0 0" class="collision"/>
+      <geom mesh="holder_a_collision_110" rgba="1 0 0 0" class="collision"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>
