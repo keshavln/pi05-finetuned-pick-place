@@ -1,0 +1,110 @@
+{
+    "cube": {
+        "class": "BoxObject",
+        "kwargs": {
+            "size": [
+                0.025,
+                0.025,
+                0.025
+            ]
+        }
+    },
+    "circle": {
+        "class": "CylinderObject",
+        "kwargs": {
+            "size": [
+                0.05,
+                0.001
+            ],
+            "joints": null
+        }
+    },
+    "bottle": {
+        "class": "BottleObject",
+        "kwargs": {}
+    },
+    "can": {
+        "class": "CanObject",
+        "kwargs": {}
+    },
+    "milk": {
+        "class": "MilkObject",
+        "kwargs": {}
+    },
+    "cereal": {
+        "class": "CerealObject",
+        "kwargs": {}
+    },
+    "mug_a": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/mug_a/mug_a.xml"
+        }
+    },
+    "pen_a": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/pen_a/pen_a.xml"
+        }
+    },
+    "pencil": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/pencil/pencil.xml"
+        }
+    },
+    "scissors": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/scissors/scissors.xml"
+        }
+    },
+    "highlighter": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/highlighter/highlighter.xml"
+        }
+    },
+    "calculator": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/calculator/calculator.xml"
+        }
+    },
+    "holder_a": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/holder_a/holder_a.xml"
+        }
+    },
+    "mouse": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/mouse/mouse.xml"
+        }
+    },
+    "coaster_a": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/coaster_a/coaster_a.xml"
+        }
+    },
+    "mug_b": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/mug_b/mug_b.xml"
+        }
+    },
+    "spoon": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/spoon/spoon.xml"
+        }
+    },
+    "pad": {
+        "class": "MujocoXMLObject",
+        "kwargs": {
+            "fname": "assets/models/pad/pad.xml"
+        }
+    }
+}
