@@ -3,14 +3,14 @@
 ## Overview
 
 This repository contains the source code to:
-- Define a custom MuJoCo-based manipulation environment using Robosuite
+- Create and randomize a complex MuJoCo-based manipulation environment using Robosuite
 - Record LeRobot datasets in the environment
 - Fine tune π0.5, a Vision-Language-Action model by Physical Intelligence
-- Run inference
+- Run inference on various manipulation tasks
 
-The goal of this endeavour was to demonstrate end-to-end deployment of π0.5. Hence, the environment used is relatively simple: consisting of a blue cube, a yellow cube and a red circle on a checkered table. This codebase is under development to extend this setup to more advanced manipulation tasks. The fine-tuned policy can be found [here](https://huggingface.co/KeshavLN/deskorgv1.4_policy), and the dataset used can be found [here](https://huggingface.co/datasets/KeshavLN/deskorgv1.2_dataset).
+The goal of this endeavour was to demonstrate end-to-end deployment of π0.5 and adapt it to perform tasks in varying lighting and background conditions. The environment consists of an assortment of common desk items randomly placed across a table. These items include pens, highlighters, mugs, coasters, etc. Domain randomization includes randomizing table colour, background hdri, lightning conditions and shadows. A custom LeRobot dataset of more than 600 episodes was recorded in this environment and used to fine tune π0.5. The training process used LoRA with a rank of 64 over 70,000 steps. The result is a VLA that is able to interact with objects of various dimensions across a range of environmental conditions. The only inputs to the model are front view and wrist cam RGB images, proprioceptive state and natural language prompt. No depth data is used. The fine-tuned policy can be found [here](https://huggingface.co/KeshavLN/deskorgv2.7_policy), and the dataset used can be found [here](https://huggingface.co/datasets/KeshavLN/deskorgv2.4_dataset_nv).
 
-A demo can be viewed below. The policy places the yellow cube on top of the red circle, obtaining visual information only from a front-view static camera and a wrist-camera. No depth information is used.
+A demo can be viewed below.
 
 
 https://github.com/user-attachments/assets/2c6f4985-e277-4f19-90d2-c20d764bf68a
