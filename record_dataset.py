@@ -36,19 +36,19 @@ def make_features() -> dict:
             "shape": (7,),
             "names": ["dx", "dy", "dz", "droll", "dpitch", "dyaw", "gripper"],
         },
-        # Proprioceptive state: [eef_pos(3), eef_quat(4), gripper_qpos(2)] = 9D
+        # proprioceptive state: [eef_pos(3), eef_quat(4), gripper_qpos(2)] = 9D
         "observation.state": {
             "dtype": "float32",
             "shape": (9,),
             "names": None,
         },
-        # Front camera (third-person view)
+        # front camera
         "observation.images.image": {
             "dtype": "video",
             "shape": (3, 256, 256),
             "names": ["channels", "height", "width"],
         },
-        # Wrist camera (eye-in-hand)
+        # wrist camera
         "observation.images.image2": {
             "dtype": "video",
             "shape": (3, 256, 256),
