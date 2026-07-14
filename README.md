@@ -20,8 +20,25 @@ https://github.com/user-attachments/assets/2c6f4985-e277-4f19-90d2-c20d764bf68a
 
 ## Detailed Look
 
-In `organizing_env.py`, a class, `DeskOrganizerRobosuiteEnv`, is defined for the Robosuite environment, which contains functions for spawning objects and randomizing their positions. A Gymnasium wrapper, `DeskOrganizerEnv`, is also defined and registered. The [obj2mjcf](https://github.com/kevinzakka/obj2mjcf) CLI was used to load textured objects into MuJoCo and generate accurate collision meshes. While the first iteration of this project used LeRobot's built-in `gym_manipulator.py` for teleoperation and data collection, the pipeline now uses a custom recording script, `record_dataset.py`.
+In `organizing_env.py`, a class, `DeskOrganizerRobosuiteEnv`, is defined for the Robosuite environment, which contains functions for spawning objects and randomizing their positions. A Gymnasium wrapper, `DeskOrganizerEnv`, is also defined and registered. The [obj2mjcf](https://github.com/kevinzakka/obj2mjcf) CLI was used to load textured objects into MuJoCo and generate accurate collision meshes.
 
-To make recording episodes easier, a simple path planner automatically accesses the coordinates of objects in the scene and guides the manipulator to complete the task. Note that this functionality is solely used for recording expert trajectories. Location information of objects in the scene is not used by the VLA during inference, or training. Alternatively, a gamepad can be used for teleoperation. This setting can be changed by toggling the `control_mode` argument between `auto` and `manual` in the constructor for the Gymnasium wrapper. It is set to `auto` by default. The tasks to record, number of episodes to record for each task, control time, HuggingFace repository, and additional details are all specified directly in `record_dataset.py`. Keep in mind that terminal authentication is required via `hf auth login` before a locally recorded dataset can be pushed to HuggingFace.
+While the first iteration of this project used LeRobot's built-in `gym_manipulator.py` for teleoperation and data collection, the pipeline now uses a custom recording script, `record_dataset.py`. To make recording episodes easier, a simple path planner automatically accesses the coordinates of objects in the scene and guides the manipulator to complete the task. Note that this functionality is solely used for recording expert trajectories used to train the model. Location information of objects in the scene is not used by the VLA during inference or training. A single episode takes roughly 30 seconds to record autonomously. 
 
-A pre-existing π0.5 checkpoint fine-tuned on the libero environment was chosen for further parameter-efficient fine-tuning, and yielded much better results compared to the base model. Relative actions were not used. `inference.ipynb` contains the final inference code, and makes use of libero's processors.
+Alternatively, a gamepad can be used for teleoperation. This setting can be changed by toggling the `control_mode` argument between `auto` and `manual` when instantiating the Gymnasium wrapper, `DeskOrganizerEnv`. It is set to `manual` in the inference script. The tasks to record, number of episodes to record for each task, control time, HuggingFace repository, and additional details are all specified directly in `record_dataset.py`. Keep in mind that terminal authentication is required via `hf auth login` before a locally recorded dataset can be pushed to HuggingFace.
+
+A pre-existing π0.5 checkpoint fine-tuned on the libero environment was chosen for further parameter-efficient fine-tuning. 118 million parameters were trained over a total of 70,000 steps. Relative actions were not used. `inference.ipynb` contains the final inference code, and makes use of libero's processors.
+
+## Usage
+`
+# Install LeRobot with pi05 dependencies
+pip install "lerobot[pi]"
+
+# Clone this repository
+git clone ...
+
+# Run inference.ipynb
+# Edit the task dict in the second cell to specify the tasks and number of episodes for each.
+# At the moment, target and destination object names must also be specified in the task dict solely to guarantee the appearance of those objects in the inference environment. This will be altered in future versions of this project.
+# For training and other useful commands, refer to commands.txt.
+
+`
