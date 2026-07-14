@@ -29,7 +29,7 @@ Alternatively, a gamepad can be used for teleoperation. This setting can be chan
 A pre-existing π0.5 checkpoint fine-tuned on the libero environment was chosen for further parameter-efficient fine-tuning. 118 million parameters were trained over a total of 70,000 steps. Relative actions were not used. `inference.ipynb` contains the final inference code, and makes use of libero's processors.
 
 ## Usage
-`
+```
 # Install LeRobot with pi05 dependencies
 pip install "lerobot[pi]"
 
@@ -41,4 +41,4 @@ git clone ...
 # At the moment, target and destination object names must also be specified in the task dict solely to guarantee the appearance of those objects in the inference environment. This will be altered in future versions of this project.
 # For training and other useful commands, refer to commands.txt.
 
-`
+```
