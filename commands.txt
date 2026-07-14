@@ -1,0 +1,42 @@
+# record a dataset
+python record_dataset.py
+
+# view an episode from a dataset
+lerobot-dataset-viz \
+  --repo-id <repo_id> \
+  --episode-index <episode_index>
+
+# command to delete certain episodes in a dataset
+lerobot-edit-dataset \
+  --repo-id <repo_id> \
+  --operation.type delete_episodes \
+  --operation.episode_indices "[list of indices of episodes to delete]" \
+  --push_to_hub true
+
+# run fine-tuning (omit peft arguments if doing full fine-tuning)
+lerobot-train \
+  --dataset.repo_id=<dataset_repo_id> \
+  --policy.type=pi05 \
+  --policy.pretrained_path=lerobot/pi05_libero_finetuned_v044 \
+  --policy.repo_id=<policy_repo_id> \
+  --output_dir=<output_dir> \
+  --policy.device=cuda \
+  --batch_size=8 \
+  --steps=30000 \
+  --save_checkpoint=true \
+  --save_freq=10000 \
+  --dataset.video_backend=pyav \
+  --wandb.enable=true \
+  --wandb.project=<project_name> \
+  --peft.method_type=LORA \
+  --peft.r=64 \
+  --peft.lora_alpha=64 \
+  --peft.target_modules='(.*vision_tower\..*\.(q_proj|v_proj|k_proj|o_proj)|.*language_model\..*\.(q_proj|v_proj|k_proj|o_proj|gate_proj|up_proj|down_proj)|.*gemma_expert\..*\.(q_proj|v_proj|k_proj|o_proj|gate_proj|up_proj|down_proj)|.*multi_modal_projector\..*linear|model\.(action_in_proj|action_out_proj|state_proj|action_time_mlp_in|action_time_mlp_out))' \
+
+# resume training from a checkpoint
+lerobot-train \
+  --config_path=<checkpoint_path>/pretrained_model/train_config.json \
+  --resume=true
+  
+  
+
