@@ -1,4 +1,4 @@
-# Fine Tuning π0.5 in a Custom Robosuite Environment
+# Fine Tuning the π0.5 VLA for a Complex Desk Environment
 
 ## Overview
 
