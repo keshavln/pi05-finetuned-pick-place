@@ -38,7 +38,8 @@ git clone ...
 
 # Run inference.ipynb
 # Edit the task dict in the second cell to specify the tasks and number of episodes for each.
-# At the moment, target and destination object names must also be specified in the task dict solely to guarantee the appearance of those objects in the inference environment. This will be altered in future versions of this project.
+# At the moment, target and destination object names must also be specified in the task dict solely to guarantee the
+# appearance of those objects in the inference environment. This will be altered in future versions of this project.
 # For training and other useful commands, refer to commands.txt.
 
 ```
