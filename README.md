@@ -15,7 +15,10 @@ The result is a VLA that is able to interact with objects of various dimensions 
 A demo can be viewed below.
 
 
-https://github.com/user-attachments/assets/2c6f4985-e277-4f19-90d2-c20d764bf68a
+
+
+https://github.com/user-attachments/assets/6724b13c-d9e8-4b8b-a132-2722a31f98ab
+
 
 
 ## Detailed Look
