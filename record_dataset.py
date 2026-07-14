@@ -1,12 +1,8 @@
 """
 Standalone dataset recorder for DeskOrganizerEnv. 
-
 Records demonstrations in the LeRobotDataset v3.0 format. 
-
 The input source (gamepad/path planner) can be set using the control_mode parameter when instantiating DeskOrganizerEnv. 
 
-Usage:
-    python record_dataset.py
 """
 
 import time
