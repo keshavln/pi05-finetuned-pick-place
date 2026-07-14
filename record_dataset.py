@@ -61,6 +61,7 @@ def task_plan():
     # note:
     # - mentioning the target and destination objects is necessary to guarantee that they are spawned on the table.
     # - the target and destination object names are not passed to the model. the only text input is the task string.
+    # - refer to item_registry.json for a catalogue of available objects.
     task_dict = {
         "Put the coffee mug on the coaster."   : ('mug_b', 'coaster_a', 11),
         "Put the holder on the coaster."       : ('holder_a', 'coaster_a', 11),
