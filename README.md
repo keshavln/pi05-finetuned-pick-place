@@ -37,7 +37,7 @@ A pre-existing π0.5 checkpoint fine-tuned on the libero environment was chosen 
 pip install "lerobot[pi]"
 
 # Clone this repository
-git clone ...
+git clone https://github.com/keshavln/pi05-finetuned-pick-place.git
 
 # Run inference.ipynb
 # Edit the task dict in the second cell to specify the tasks and number of episodes for each.
